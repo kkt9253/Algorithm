@@ -1,19 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int alpha[26];
+string str;
+int cnt[26];
 
 int main() {
-	string s;
-	cin >> s;
-	int ws = s.size();
-	char arr[ws+1];
-	strcpy(arr, s.c_str());
-	
-	for (int i = 0; i < ws; i++) {
-		int n = arr[i] - 'a';
-		alpha[n]++;
+	ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
+	cin >> str;
+	for (char i : str) {
+		cnt[i - 'a']++;
 	}
-	for (int i : alpha) cout << i << " ";
-	return 0;
+	for (int i : cnt) cout << i << " ";
 }
