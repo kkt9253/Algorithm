@@ -8,7 +8,7 @@ int dx[] = {0, 1, 0, -1};
 int n, l, r, a[54][54], visited[54][54], cnt, sum;
 vector<pair<int, int>> v;
 
-void dfs(int y, int x) {
+void dfs(int y, int x, vector<pair<int, int>> &v) {
 	for (int i = 0; i < 4; i++) {
 		int ny = y + dy[i];
 		int nx = x + dx[i];
@@ -17,7 +17,7 @@ void dfs(int y, int x) {
 			visited[ny][nx] = 1;
 			sum += a[ny][nx];
 			v.push_back({ny, nx});
-			dfs(ny, nx);
+			dfs(ny, nx, v);
 		}
 	}
 }
@@ -41,7 +41,7 @@ int main() {
 					visited[i][j] = 1;
 					sum = a[i][j];
 					v.push_back({i, j});
-					dfs(i, j);
+					dfs(i, j, v);
 					if (v.size() == 1) continue;
 					flag = 1;
 					for (auto k : v) {
