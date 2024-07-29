@@ -5,31 +5,8 @@ int dy[] = {-1, 0, 1, 0};
 int dx[] = {0, 1, 0, -1};
 
 char a[304][304];
-int n, m, visited[304][304], x, y, cnt;
+int n, m, visited[304][304], cnt;
 pair<int, int> junan, crim;
-
-void bfs(int sy, int sx) {
-    queue<pair<int, int>> q;
-    visited[sy][sx] = 1;
-    q.push({sy, sx});
-    while (q.size()) {
-        tie(y, x) = q.front(); q.pop();
-        for (int i = 0; i < 4; i++) {
-            int ny = y + dy[i];
-            int nx = x + dx[i];
-            if (0 > ny || 0 > nx || nx >= m || ny >= n || visited[ny][nx]) continue;
-            if (a[ny][nx] == '0') {
-                visited[ny][nx] = visited[y][x];
-                q.push({ny, nx});
-            }
-            else if (a[ny][nx] == '1' || a[ny][nx] == '#') {
-            	visited[ny][nx] = visited[y][x] + 1;
-            	a[ny][nx] = '0';
-            }
-        }
-    }
-    return;
-}
 
 int main() {
     ios_base::sync_with_stdio(false);
@@ -44,13 +21,37 @@ int main() {
 		}
 	}
 	
+    queue<pair<int, int>> q;
+    visited[junan.first][junan.second] = 1;
+    q.push({junan.first, junan.second});
+    
 	while (a[crim.first][crim.second] != '0') {
-		fill(&visited[0][0], &visited[0][0] + 304 * 304, 0);
+		queue<pair<int, int>> temp;
 		cnt++;
-    	bfs(junan.first, junan.second);
+		
+		while (q.size()) {
+			int y, x;
+			tie(y, x) = q.front(); q.pop();
+			
+			for (int i = 0; i < 4; i++) {
+	            int ny = y + dy[i];
+	            int nx = x + dx[i];
+	            if (0 > ny || 0 > nx || nx >= m || ny >= n || visited[ny][nx]) continue;
+	            visited[ny][nx] = cnt;
+	            
+	            if (a[ny][nx] == '0') {
+	                q.push({ny, nx});
+	            }
+	            else if (a[ny][nx] == '1' || a[ny][nx] == '#') {
+	            	a[ny][nx] = '0';
+	            	temp.push({ny, nx});
+	            }
+        	}
+		}
+		q = temp;
 	}
     
-    cout << cnt;
+    cout << visited[crim.first][crim.second];
     
     return 0;
 }
