@@ -2,73 +2,52 @@
 using namespace std;
 const int INF = 1e9;
 
-int n, a[14], b, c, d, ret = INF;
-vector<int> av[14];
+int n, a[14], m, k, comp[14], visited[14], ret = INF;
+vector<int> v[14];
 
-// 선거구의 인구 합 
-int cal(vector<int> &v) {
-	int sum = 0;
-	for (int i : v) sum += a[i];
-	return sum;
-}
-
-// 모든 구역이 연결되어 있는지 확인하는 함수 
-bool check(vector<int> &v) {
-	if (v.empty()) return 0;
-	vector<int> visited(14, 0);
-	queue<int> q;
-	q.push(v[0]);
-	visited[v[0]] = 1;
-	int cnt = 1;
-	
-	while (q.size()) {
-		int here = q.front(); q.pop();
-		for (int next : av[here]) {
-			if (!visited[next] && find(v.begin(), v.end(), next) != v.end()) {
-				visited[next] = 1;
-				q.push(next);
-				cnt++;
-			}
+pair<int, int> dfs(int here, int val) {
+	visited[here] = 1;
+	pair<int, int> ret = {1, a[here]};
+	for (int next : v[here]) {
+		if (!visited[next] && comp[next] == val) {
+			pair<int, int> temp = dfs(next, val);
+			ret.first += temp.first;
+			ret.second += temp.second;
 		}
 	}
-	return cnt == v.size();
-}
-
-// 1선거구, 2선거구를 나누어 모두 연결되어 있는지 확인하고 true라면 두 선거구의 인구차이를 ret에 저장. 
-void go(int num) {
-	vector<int> f;
-	vector<int> s;
-	for (int i = 0; i < n; i++) {
-		if (num & (1 << i)) f.push_back(i + 1);
-		else s.push_back(i + 1);
-	}
-	
-	if (check(f) && check(s)) {
-		int val = abs(cal(f) - cal(s));
-		ret = min(ret, val);
-	}
-	
-	return;
+	return ret;
 }
 
 int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(0); cout.tie(0);
+	
 	cin >> n;
 	for (int i = 1; i <= n; i++) cin >> a[i];
 	for (int i = 1; i <= n; i++) {
-		cin >> b;
-		for (int j = 0; j < b; j++) {
-			cin >> c;
-			av[i].push_back(c);
+		cin >> m;
+		for (int j = 0; j < m; j++) {
+			cin >> k;
+			v[i].push_back(k);
 		}
 	}
 	
-	// 아무것도 포함하지 않는 경우를 제외한 모든 경우를 비트로 만들어 보냄. 
-	for (int i = 1; i < (1 << n); i++) {
-		go(i);
+	for (int i = 1; i < (1 << n) - 1; i++) {
+		fill(&comp[0], &comp[0] + 14, 0);
+		fill(&visited[0], &visited[0] + 14, 0);
+		int idx1 = -1, idx2 = -1;
+		for (int j = 0; j < n; j++) {
+			if (i & (1 << j)) {
+				comp[j + 1] = 1;
+				idx1 = j + 1;
+			} else idx2 = j + 1;
+		}
+		pair<int, int> comp1 = dfs(idx1, 1);
+		pair<int, int> comp2 = dfs(idx2, 0);
+		if (comp1.first + comp2.first == n) ret = min(ret, abs(comp1.second - comp2.second));
 	}
 	
-	if (ret == INF) cout << -1;
-	else cout << ret;
+	cout << (ret == INF ? -1 : ret) << "\n";
 	
 	return 0;
 }
