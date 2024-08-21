@@ -1,0 +1,20 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL); cout.tie(NULL);
+	
+	cin >> n;
+	
+	string ret = "";
+	while (n--) {
+		ret += "*";
+		cout << ret << "\n";
+	}
+	
+	
+	return 0;
+}
