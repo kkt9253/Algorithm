@@ -1,34 +1,35 @@
 #include <bits/stdc++.h>
 using namespace std;
+#define INF 1e9
 
-int n, ret;
+int ret, n, ar[200004];
 string s;
-int check[200004];
 stack<int> stk;
 
 int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL); cout.tie(NULL);
 	
 	cin >> n >> s;
 	
 	for (int i = 0; i < n; i++) {
 		if (s[i] == '(') {
 			stk.push(i);
-		}
-		else {
-			if (stk.size()) {
-				check[i] = check[stk.top()] = 1;
-				stk.pop();
-			}
+		} else if (stk.size() && s[i] == ')'){
+			ar[i] = 1;
+			ar[stk.top()] = 1;
+			stk.pop();
 		}
 	}
 	
 	int cnt = 0;
-	for (int i : check) {
-		if (i == 1) cnt++;
-		else {
-			ret = max(ret, cnt);
+	for (int i = 0; i < n; i++) {
+		if (ar[i]) {
+			cnt += 1;
+		} else {
 			cnt = 0;
 		}
+		ret = max(ret, cnt);
 	}
 	
 	cout << ret;
