@@ -2,7 +2,7 @@
 using namespace std;
 #define INF 1e9
 
-int ret, n, ar[200004];
+int n, ret;
 string s;
 stack<int> stk;
 
@@ -11,25 +11,17 @@ int main() {
 	cin.tie(NULL); cout.tie(NULL);
 	
 	cin >> n >> s;
+	stk.push(-1);
 	
 	for (int i = 0; i < n; i++) {
 		if (s[i] == '(') {
 			stk.push(i);
-		} else if (stk.size() && s[i] == ')'){
-			ar[i] = 1;
-			ar[stk.top()] = 1;
+		} 
+		else {
 			stk.pop();
+			if (stk.empty()) stk.push(i);
+			else ret = max(ret, i - stk.top());
 		}
-	}
-	
-	int cnt = 0;
-	for (int i = 0; i < n; i++) {
-		if (ar[i]) {
-			cnt += 1;
-		} else {
-			cnt = 0;
-		}
-		ret = max(ret, cnt);
 	}
 	
 	cout << ret;
