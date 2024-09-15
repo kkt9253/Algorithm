@@ -7,39 +7,29 @@ int dy[4] = {1, 0, -1, 0};
 int dx[4] = {0, 1, 0, -1};
 
 int n, ar[70][70];
-string s;
-
-string check(int sy, int sx, int siz) {
-    int ret = 0;
-    
-    for (int i = sy; i < sy + siz; i++) {
-        for (int j = sx; j < sx + siz; j++) {
-            ret += ar[i][j];
-        }
-    }
-    
-    if (ret == 0) return "0";
-    else if (ret == siz * siz) return "1";
-    return "err";
-}
+string s, s1, s2, s3 ,s4;
 
 string quad(int sy, int sx, int siz) {
+	char chk = ar[sy][sx] + '0';
+	if (siz == 1) return string(1, chk);
 	
-    if (siz == 1) {
-        return to_string(ar[sy][sx]);
-    }
-
-    string s1 = check(sy, sx, siz / 2);
-    string s2 = check(sy, sx + siz / 2, siz / 2);
-    string s3 = check(sy + siz / 2, sx, siz / 2);
-    string s4 = check(sy + siz / 2, sx + siz / 2, siz / 2);
-
-    if (s1 == "err") s1 = quad(sy, sx, siz / 2);
-    if (s2 == "err") s2 = quad(sy, sx + siz / 2, siz / 2);
-    if (s3 == "err") s3 = quad(sy + siz / 2, sx, siz / 2);
-    if (s4 == "err") s4 = quad(sy + siz / 2, sx + siz / 2, siz / 2);
+	string ret = "";
     
-    return "(" + s1 + s2 + s3 + s4 + ")";
+    for (int i = sy; i < sy + siz; i++) {
+    	for (int j = sx; j < sx + siz; j++) {
+    		if (chk != ar[i][j] + '0') {
+    			ret += "(";
+    			ret += quad(sy, sx, siz / 2);
+  				ret += quad(sy, sx + siz / 2, siz / 2);
+    			ret += quad(sy + siz / 2, sx, siz / 2);
+    			ret += quad(sy + siz / 2, sx + siz / 2, siz / 2);
+    			ret += ")";
+    			return ret;
+			}
+		}
+	}
+    
+    return string(1, chk);
 }
 
 int main() {
@@ -55,10 +45,7 @@ int main() {
         }
     }
     
-    string ret = check(0, 0, n);
-    if (ret == "err") {
-        ret = quad(0, 0, n);
-    }
+    string ret = quad(0, 0, n);
 
     cout << ret;
     
