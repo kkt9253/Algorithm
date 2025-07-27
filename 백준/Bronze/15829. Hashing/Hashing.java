@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
 
@@ -10,13 +11,17 @@ public class Main {
         int n = Integer.parseInt(br.readLine());
         String input = br.readLine();
         int m = 1234567891;
+        int r = 31;
 
-        int sum = 0;
+        long sum = 0;
+        long power = 1;
         for (int i = 0; i < n; i++) {
-            sum += ((input.charAt(i) - 'a' + 1) * (int) Math.pow(31, i));
+            int value = input.charAt(i) - 'a' + 1;
+            sum = (sum + value * power) % m;
+            power = (power * r) % m;
         }
 
-        bw.write(sum%m + "\n");
+        bw.write(sum + "\n");
         bw.flush();
         bw.close();
     }
