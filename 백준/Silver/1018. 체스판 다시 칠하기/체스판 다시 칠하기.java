@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -8,49 +9,36 @@ public class Main {
     static int min = Integer.MAX_VALUE;
     static char[][] arr = new char[54][54];
 
-    static void solve(int y, int x, char c) {
+    static void solve(int y, int x) throws IOException {
         int cnt = 0;
 
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                // 짝
-                if (i%2 == 0) {
-                    if (j%2 == 0) {
-                        if (arr[i+y][j+x] != c) cnt++;
-                    } else {
-                        if (arr[i+y][j+x] == c) cnt++;
-                    }
-                }
-                // 홀
-                else {
-                    if (j%2 == 0) {
-                        if (arr[i+y][j+x] == c) cnt++;
-                    } else {
-                        if (arr[i+y][j+x] != c) cnt++;
-                    }
-                }
+        char cur = arr[y][x];
+        for (int i = y; i < y+8; i++) {
+            for (int j = x; j < x+8; j++) {
+                char changeC;
+                if ((i+j)%2 == 0) changeC = cur;
+                else changeC = (cur == 'W' ? 'B' : 'W');
+
+                if (arr[i][j] != changeC) cnt++;
             }
         }
+        cnt = Math.min(cnt, 64 - cnt);
         if (min > cnt) min = cnt;
     }
 
     public static void main(String[] args) throws IOException {
 
-        String[] s = br.readLine().split(" ");
-        int n = Integer.parseInt(s[0]); // row
-        int m = Integer.parseInt(s[1]); // col
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
 
         for (int i = 0; i < n; i++) {
-            String line = br.readLine();
-            for (int j = 0; j < m; j++) {
-                arr[i][j] = line.charAt(j);
-            }
+            arr[i] = br.readLine().toCharArray();
         }
 
         for (int i = 0; i <= n-8; i++) {
             for (int j = 0; j <= m-8; j++) {
-                solve(i, j, 'W');
-                solve(i, j, 'B');
+                solve(i, j);
             }
         }
 
