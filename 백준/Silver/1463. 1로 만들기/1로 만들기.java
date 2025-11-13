@@ -17,33 +17,26 @@ class Main {
     public static void main(String[] args) throws IOException {
 
         n = Integer.parseInt(br.readLine());
-        Arrays.fill(dp, -1);
         dp[0] = 0; dp[1] = 0; dp[2] = 1; dp[3] = 1;
+        
+        if (n < 4) {
+            bw.write(String.valueOf(dp[n]));
+            bw.flush();
+            return;
+        }
 
-        bw.write(String.valueOf(solve(n)));
+        for (int i = 4; i <= n; i++) {
+            dp[i] = Math.min(
+                    dp[i-1],
+                    Math.min(
+                            i%3 == 0 ? dp[i/3] : MAX,
+                            i%2 == 0 ? dp[i/2] : MAX
+                    )
+            ) + 1;
+        }
 
-        br.close();
+        bw.write(String.valueOf(dp[n]));
+
         bw.flush();
-        bw.close();
-    }
-
-    static int solve(int nn) {
-        if (nn <= 1) {
-            return 0;
-        }
-        if (dp[nn] != -1) {
-            return dp[nn];
-        }
-
-        int a = MAX, b = MAX, c = MAX;
-        if (nn % 3 == 0) {
-            a = solve(nn / 3);
-        }
-        if (nn % 2 == 0) {
-            b = solve(nn / 2);
-        }
-        c = solve(nn - 1);
-
-        return dp[nn] = Math.min(a, Math.min(b, c)) + 1;
     }
 }
