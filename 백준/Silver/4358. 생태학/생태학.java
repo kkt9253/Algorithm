@@ -18,7 +18,7 @@ class Main {
         int treeCnt = 0;
         while (true) {
             String line = br.readLine();
-            if (line == null || line.isBlank()) {
+            if (line == null) {
                 break;
             }
 
